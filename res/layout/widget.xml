@@ -6,9 +6,10 @@
  	
     
     <LinearLayout
+        android:id="@+id/l"
  		android:layout_width="wrap_content"
  		android:layout_height="match_parent"
- 		android:background="#6600ff00"
+ 		android:background="#cc000000"
  		android:orientation="vertical"
  		android:layout_weight="1">
 	
@@ -17,7 +18,7 @@
  			android:layout_width="wrap_content"
  			android:layout_height="wrap_content"
  			android:text=""
- 			android:textColor="#000"
+ 			android:textColor="#fff"
  			android:textSize="18sp">
 		</TextView>
 		
@@ -26,7 +27,7 @@
  			android:layout_width="wrap_content"
  			android:layout_height="wrap_content"
  			android:text="dfsdf"
- 			android:textColor="#000"
+ 			android:textColor="#555"
  			android:textSize="18sp">
 		</TextView>
 	

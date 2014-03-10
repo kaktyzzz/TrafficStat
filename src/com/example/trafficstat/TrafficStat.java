@@ -2,13 +2,17 @@ package com.example.trafficstat;
 
 import java.util.Arrays;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.sax.StartElementListener;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.net.TrafficStats;
+import android.os.Bundle;
 
 public class TrafficStat extends AppWidgetProvider {
 
@@ -25,9 +29,9 @@ public class TrafficStat extends AppWidgetProvider {
   public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
     super.onUpdate(context, appWidgetManager, appWidgetIds);
     Log.d(LOG_TAG, "onUpdate " + Arrays.toString(appWidgetIds));
-    SharedPreferences sp = context.getSharedPreferences(ConfigActivity.WIDGET_PREF, Context.MODE_PRIVATE);
+    
     for (int id : appWidgetIds) {
-    	updateWidget(context, appWidgetManager, sp, id);
+    	updateWidget(context, appWidgetManager, id);
     }
   }
 
@@ -43,10 +47,11 @@ public class TrafficStat extends AppWidgetProvider {
     Log.d(LOG_TAG, "onDisabled");
   }
 
-  static void updateWidget(Context context, AppWidgetManager appWidgetManager, SharedPreferences sp, int widgetID) {
+  static void updateWidget(Context context, AppWidgetManager appWidgetManager, int widgetID) {
 	  Log.d(LOG_TAG, "updateWidget " + widgetID);
-	    
-	  // Читаем параметры Preferences
+	  
+	  SharedPreferences sp = context.getSharedPreferences(ConfigActivity.WIDGET_PREF, Context.MODE_PRIVATE);
+	  // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Preferences
 	  int modei = sp.getInt(ConfigActivity.WIDGET_MODEI, -1);
 	  String widgetMode = sp.getString(ConfigActivity.WIDGET_MODES + widgetID, null);
 	  if (widgetMode == null) return;
@@ -65,12 +70,28 @@ public class TrafficStat extends AppWidgetProvider {
 	  		return;
 	  }
 	  
-	  // Настраиваем внешний вид виджета
+	  // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	  RemoteViews widgetView = new RemoteViews(context.getPackageName(), R.layout.widget);
 	  widgetView.setTextViewText(R.id.tv, widgetMode + ": " + String.format("%.03f", stat));
 	    
-	  // Обновляем виджет
+	  Intent updateIntent = new Intent(context, TrafficStat.class);
+	  updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+	  updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetID);
+	  PendingIntent pIntent = PendingIntent.getBroadcast(context, widgetID, updateIntent, 0);
+	  widgetView.setOnClickPendingIntent(R.id.l, pIntent);
+	  
+	  // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 	  appWidgetManager.updateAppWidget(widgetID, widgetView);
+  }
+  
+  public void onReceive(Context context, Intent intent) {
+	  
+	  int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+	  Bundle extras = intent.getExtras();
+	  if (extras != null) {
+		  mAppWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+	  } 
+	  updateWidget(context, AppWidgetManager.getInstance(context), mAppWidgetId);
   }
   
 }
