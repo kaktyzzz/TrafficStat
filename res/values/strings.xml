@@ -1,0 +1,13 @@
+<resources>
+
+    <string name="app_name">TrafficStat</string>
+    <string name="widget_name">TrafficWidget</string>
+    
+    <string-array name="list">
+    	<item>WiFi</item>
+    	<item>Mobile</item>
+	</string-array>
+    <string name="wifi">WiFi</string>
+	<string name="Mob">Mobile</string>
+	<string name="OK">OK</string>
+</resources>
