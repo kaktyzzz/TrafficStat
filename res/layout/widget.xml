@@ -19,16 +19,16 @@
  			android:layout_height="wrap_content"
  			android:text=""
  			android:textColor="#fff"
- 			android:textSize="18sp">
+ 			android:textSize="14sp">
 		</TextView>
 		
 		<TextView
  			android:id="@+id/tv1"
  			android:layout_width="wrap_content"
  			android:layout_height="wrap_content"
- 			android:text="dfsdf"
- 			android:textColor="#555"
- 			android:textSize="18sp">
+ 			android:text="Progress"
+ 			android:textColor="#777"
+ 			android:textSize="14sp">
 		</TextView>
 	
 	</LinearLayout>

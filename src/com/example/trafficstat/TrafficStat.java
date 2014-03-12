@@ -16,8 +16,9 @@ import android.os.Bundle;
 
 public class TrafficStat extends AppWidgetProvider {
 
-  static final String LOG_TAG = "myLogs";
-  static final int metric = 1048576;
+  public static final String LOG_TAG = "TraficWidget";
+  static final int metricDel = 1048576;
+  static final String metric = "Mb";
 
   @Override
   public void onEnabled(Context context) {
@@ -52,7 +53,7 @@ public class TrafficStat extends AppWidgetProvider {
 	  
 	  SharedPreferences sp = context.getSharedPreferences(ConfigActivity.WIDGET_PREF, Context.MODE_PRIVATE);
 	  // ������ ��������� Preferences
-	  int modei = sp.getInt(ConfigActivity.WIDGET_MODEI, -1);
+	  int modei = sp.getInt(ConfigActivity.WIDGET_MODEI + widgetID, -1);
 	  String widgetMode = sp.getString(ConfigActivity.WIDGET_MODES + widgetID, null);
 	  if (widgetMode == null) return;
 	  
@@ -61,10 +62,10 @@ public class TrafficStat extends AppWidgetProvider {
 	  float stat = 0;
 	  switch (modei) {
 	  	case 0:
-	  		stat =  (float)(statTotal - statMob) / metric;
+	  		stat =  (float)(statTotal - statMob) / metricDel;
 	  		break;
 	  	case 1:
-	  		stat = (float)(statMob) / metric;
+	  		stat = (float)(statMob) / metricDel;
 	  		break;
 	  	case -1:
 	  		return;
@@ -72,7 +73,7 @@ public class TrafficStat extends AppWidgetProvider {
 	  
 	  // ����������� ������� ��� �������
 	  RemoteViews widgetView = new RemoteViews(context.getPackageName(), R.layout.widget);
-	  widgetView.setTextViewText(R.id.tv, widgetMode + ": " + String.format("%.03f", stat));
+	  widgetView.setTextViewText(R.id.tv, widgetMode + ": " + String.format("%.02f", stat) + " " + metric);
 	    
 	  Intent updateIntent = new Intent(context, TrafficStat.class);
 	  updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);

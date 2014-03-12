@@ -16,8 +16,6 @@ public class ConfigActivity extends Activity {
 
   int widgetID = AppWidgetManager.INVALID_APPWIDGET_ID;
   Intent resultValue;
-  
-  final String LOG_TAG = "myLogs";
 
   public final static String WIDGET_PREF = "widget_pref";
   public final static String WIDGET_MODES = "widget_modes_";
@@ -26,7 +24,7 @@ public class ConfigActivity extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Log.d(LOG_TAG, "onCreate config");
+    Log.d(TrafficStat.LOG_TAG, "onCreate config");
     
     // ��������� ID ���������������� �������
     Intent intent = getIntent();
@@ -64,7 +62,7 @@ public class ConfigActivity extends Activity {
     SharedPreferences sp = getSharedPreferences(WIDGET_PREF, MODE_PRIVATE);
     Editor editor = sp.edit();
     editor.putString(WIDGET_MODES + widgetID, modes);
-    editor.putInt(WIDGET_MODEI, modei);
+    editor.putInt(WIDGET_MODEI + widgetID, modei);
     editor.commit();
 
     AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
@@ -73,7 +71,7 @@ public class ConfigActivity extends Activity {
     // ������������� ����� 
     setResult(RESULT_OK, resultValue);
     
-    Log.d(LOG_TAG, "finish config " + widgetID);
+    Log.d(TrafficStat.LOG_TAG, "finish config " + widgetID);
     finish();
   }
 }
