@@ -1,4 +1,4 @@
-package com.example.trafficstat;
+﻿package com.example.trafficstat;
 
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Spinner;
 
 public class ConfigActivity extends Activity {
@@ -26,23 +25,23 @@ public class ConfigActivity extends Activity {
     super.onCreate(savedInstanceState);
     Log.d(TrafficStat.LOG_TAG, "onCreate config");
     
-    // ��������� ID ���������������� �������
+    // извлекаем ID конфигурируемого виджета
     Intent intent = getIntent();
     Bundle extras = intent.getExtras();
     if (extras != null) {
       widgetID = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID,
           AppWidgetManager.INVALID_APPWIDGET_ID);
     }
-    // � ��������� ��� ������������
+    // и проверяем его корректность
     if (widgetID == AppWidgetManager.INVALID_APPWIDGET_ID) {
       finish();
     }
     
-    // ��������� intent ������
+    // формируем intent ответа
     resultValue = new Intent();
     resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetID);
     
-    // ������������� �����
+    // отрицательный ответ
     setResult(RESULT_CANCELED, resultValue);
     
     setContentView(R.layout.config);
@@ -50,15 +49,12 @@ public class ConfigActivity extends Activity {
   
   
   public void onClick(View v) {
-    //int selRBColor = ((RadioGroup) findViewById(R.id.rgColor))
-    //    .getCheckedRadioButtonId();
     Spinner spn = ((Spinner) findViewById(R.id.spinner1));
 	String modes = spn.getSelectedItem().toString();
 	int modei = spn.getSelectedItemPosition();
 	
-	//EditText etText = (EditText) findViewById(R.id.etText);
 
-    // ���������� �������� � ������ � Preferences
+    // пишем в Preferences
     SharedPreferences sp = getSharedPreferences(WIDGET_PREF, MODE_PRIVATE);
     Editor editor = sp.edit();
     editor.putString(WIDGET_MODES + widgetID, modes);
@@ -68,9 +64,9 @@ public class ConfigActivity extends Activity {
     AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
     TrafficStat.updateWidget(this, appWidgetManager, widgetID);
     
-    // ������������� ����� 
+    // положительный ответ 
     setResult(RESULT_OK, resultValue);
-    
+      
     Log.d(TrafficStat.LOG_TAG, "finish config " + widgetID);
     finish();
   }

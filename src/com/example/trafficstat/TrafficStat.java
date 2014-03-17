@@ -1,4 +1,4 @@
-package com.example.trafficstat;
+﻿package com.example.trafficstat;
 
 import java.util.Arrays;
 
@@ -52,8 +52,8 @@ public class TrafficStat extends AppWidgetProvider {
   static void updateWidget(Context context, AppWidgetManager appWidgetManager, int widgetID) {
 	  Log.d(LOG_TAG, "updateWidget " + widgetID);
 	  
+	  // читаем Preferences
 	  SharedPreferences sp = context.getSharedPreferences(ConfigActivity.WIDGET_PREF, Context.MODE_PRIVATE);
-	  // ������ ��������� Preferences
 	  int modei = sp.getInt(ConfigActivity.WIDGET_MODEI + widgetID, -1);
 	  String widgetMode = sp.getString(ConfigActivity.WIDGET_MODES + widgetID, null);
 	  if (widgetMode == null) return;
@@ -72,17 +72,17 @@ public class TrafficStat extends AppWidgetProvider {
 	  		return;
 	  }
 	  
-	  // ����������� ������� ��� �������
+	  // Настраиваем внешний вид виджета
 	  RemoteViews widgetView = new RemoteViews(context.getPackageName(), R.layout.widget);
 	  widgetView.setTextViewText(R.id.tv, widgetMode + ": " + String.format("%.02f", stat) + " " + metric);
 	    
-	  //������� �� 1 ����
+	  //Нажатие на 1 зону
 	  Intent updateIntent = new Intent(context, TrafficStat.class);
 	  updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 	  updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetID);
 	  PendingIntent pIntent = PendingIntent.getBroadcast(context, widgetID, updateIntent, 0);
 	  widgetView.setOnClickPendingIntent(R.id.l, pIntent);
-	  //������� �� 2 ����
+	  //Нажатие на 2 зону
 	  Intent countIntent = new Intent(context, TrafficStat.class);
 	  countIntent.setAction(ACTION_OPENSETTINGS);
 	  countIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetID);
@@ -91,7 +91,7 @@ public class TrafficStat extends AppWidgetProvider {
 
 	  
 	  
-	  // ��������� ������
+	  // Обновляем виджет
 	  appWidgetManager.updateAppWidget(widgetID, widgetView);
   }
   
@@ -106,9 +106,10 @@ public class TrafficStat extends AppWidgetProvider {
 	  } 
 	  updateWidget(context, AppWidgetManager.getInstance(context), mAppWidgetId);
 	  
-	  // ���������, ��� ��� intent �� ������� �� ������ ����
+	  // Проверяем, что это intent от нажатия на 2 зону
 	  if (intent.getAction().equalsIgnoreCase(ACTION_OPENSETTINGS)) {
 		  try {
+			  //вызываем окно настроек
 			  Intent in = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
 			  in.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			  context.startActivity(in);
