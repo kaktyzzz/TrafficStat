@@ -13,12 +13,13 @@ import android.util.Log;
 import android.widget.RemoteViews;
 import android.net.TrafficStats;
 import android.os.Bundle;
+import android.provider.Settings;
 
 public class TrafficStat extends AppWidgetProvider {
 
   public static final String LOG_TAG = "TraficWidget";
   static final int metricDel = 1048576;
-  static final String metric = "Mb";
+  static final String metric = "MB";
 
   @Override
   public void onEnabled(Context context) {
@@ -29,8 +30,7 @@ public class TrafficStat extends AppWidgetProvider {
   @Override
   public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
     super.onUpdate(context, appWidgetManager, appWidgetIds);
-    Log.d(LOG_TAG, "onUpdate " + Arrays.toString(appWidgetIds));
-    
+    Log.d(LOG_TAG, "onUpdate " + Arrays.toString(appWidgetIds));	
     for (int id : appWidgetIds) {
     	updateWidget(context, appWidgetManager, id);
     }
@@ -86,7 +86,9 @@ public class TrafficStat extends AppWidgetProvider {
   }
   
   public void onReceive(Context context, Intent intent) {
+	  super.onReceive(context, intent);
 	  
+	  Log.d(LOG_TAG, "OnReceive");
 	  int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 	  Bundle extras = intent.getExtras();
 	  if (extras != null) {
