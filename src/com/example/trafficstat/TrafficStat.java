@@ -20,6 +20,7 @@ public class TrafficStat extends AppWidgetProvider {
   public static final String LOG_TAG = "TraficWidget";
   static final int metricDel = 1048576;
   static final String metric = "MB";
+  static final String ACTION_OPENSETTINGS = "com.example.trafficstat.openSettings";
 
   @Override
   public void onEnabled(Context context) {
@@ -75,11 +76,20 @@ public class TrafficStat extends AppWidgetProvider {
 	  RemoteViews widgetView = new RemoteViews(context.getPackageName(), R.layout.widget);
 	  widgetView.setTextViewText(R.id.tv, widgetMode + ": " + String.format("%.02f", stat) + " " + metric);
 	    
+	  //Нажатие на 1 зону
 	  Intent updateIntent = new Intent(context, TrafficStat.class);
 	  updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 	  updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetID);
 	  PendingIntent pIntent = PendingIntent.getBroadcast(context, widgetID, updateIntent, 0);
 	  widgetView.setOnClickPendingIntent(R.id.l, pIntent);
+	  //Нажатие на 2 зону
+	  Intent countIntent = new Intent(context, TrafficStat.class);
+	  countIntent.setAction(ACTION_OPENSETTINGS);
+	  countIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetID);
+	  pIntent = PendingIntent.getBroadcast(context, widgetID, countIntent, 0);
+	  widgetView.setOnClickPendingIntent(R.id.openSettings, pIntent);
+
+	  
 	  
 	  // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 	  appWidgetManager.updateAppWidget(widgetID, widgetView);
@@ -95,6 +105,17 @@ public class TrafficStat extends AppWidgetProvider {
 		  mAppWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
 	  } 
 	  updateWidget(context, AppWidgetManager.getInstance(context), mAppWidgetId);
+	  
+	  // Проверяем, что это intent от нажатия на третью зону
+	  if (intent.getAction().equalsIgnoreCase(ACTION_OPENSETTINGS)) {
+		  try {
+			  Intent in = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
+			  in.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			  context.startActivity(in);
+		  } catch (Exception e) {
+			  Log.e(LOG_TAG, e.getMessage());
+		  }
+	  }
   }
   
 }
