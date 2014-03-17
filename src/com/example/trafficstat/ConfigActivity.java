@@ -16,9 +16,11 @@ public class ConfigActivity extends Activity {
   int widgetID = AppWidgetManager.INVALID_APPWIDGET_ID;
   Intent resultValue;
 
-  public final static String WIDGET_PREF = "widget_pref";
-  public final static String WIDGET_MODES = "widget_modes_";
-  public final static String WIDGET_MODEI = "widget_modei_";
+  public final static String WIDGET_PREF				= "widget_pref";
+  public final static String WIDGET_MODES 	 			= "widget_modes_";
+  public final static String WIDGET_MODEI 				= "widget_modei_";
+  public final static String WIDGET_CURRENT_DATA_SIZE 	= "widget_current_data_size_";
+  public final static String WIDGET_REAL_DATA_SIZE 		= "widget_real_data_size_";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {

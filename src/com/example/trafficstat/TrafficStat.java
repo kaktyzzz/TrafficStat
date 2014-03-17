@@ -8,6 +8,9 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.database.CursorWindow;
+import android.database.CursorWrapper;
 import android.sax.StartElementListener;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -56,6 +59,8 @@ public class TrafficStat extends AppWidgetProvider {
 	  SharedPreferences sp = context.getSharedPreferences(ConfigActivity.WIDGET_PREF, Context.MODE_PRIVATE);
 	  int modei = sp.getInt(ConfigActivity.WIDGET_MODEI + widgetID, -1);
 	  String widgetMode = sp.getString(ConfigActivity.WIDGET_MODES + widgetID, null);
+	  float currentDataSize = sp.getFloat(ConfigActivity.WIDGET_CURRENT_DATA_SIZE + widgetID, 0);
+	  float realDataSize = sp.getFloat(ConfigActivity.WIDGET_REAL_DATA_SIZE + widgetID, 0);
 	  if (widgetMode == null) return;
 	  
 	  long statMob = TrafficStats.getMobileTxBytes() + TrafficStats.getMobileRxBytes();
@@ -71,6 +76,17 @@ public class TrafficStat extends AppWidgetProvider {
 	  	case -1:
 	  		return;
 	  }
+	  
+	  if (currentDataSize > stat)
+		  realDataSize += currentDataSize;
+	  
+	  currentDataSize = stat;
+	  stat += realDataSize;
+	  
+	  Editor editor = sp.edit();
+	  editor.putFloat(ConfigActivity.WIDGET_CURRENT_DATA_SIZE + widgetID, currentDataSize);
+	  editor.putFloat(ConfigActivity.WIDGET_REAL_DATA_SIZE + widgetID, realDataSize);
+	  editor.commit();
 	  
 	  // Настраиваем внешний вид виджета
 	  RemoteViews widgetView = new RemoteViews(context.getPackageName(), R.layout.widget);
