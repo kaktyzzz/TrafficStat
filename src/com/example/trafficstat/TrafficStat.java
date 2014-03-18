@@ -1,6 +1,7 @@
 ﻿package com.example.trafficstat;
 
 import java.util.Arrays;
+import java.util.Calendar;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -24,6 +25,9 @@ public class TrafficStat extends AppWidgetProvider {
   static final int metricDel = 1048576;
   static final String metric = "MB";
   static final String ACTION_OPENSETTINGS = "com.example.trafficstat.openSettings";
+  
+  public static int maxTraffic = 3072;
+  
 
   @Override
   public void onEnabled(Context context) {
@@ -91,6 +95,24 @@ public class TrafficStat extends AppWidgetProvider {
 	  // Настраиваем внешний вид виджета
 	  RemoteViews widgetView = new RemoteViews(context.getPackageName(), R.layout.widget);
 	  widgetView.setTextViewText(R.id.tv, widgetMode + ": " + String.format("%.02f", stat) + " " + metric);
+	  
+	  //считаем % съеденого трафика
+	  float trafficPrec = stat / maxTraffic * 100;
+	  Log.d(LOG_TAG, "% traffic "+trafficPrec);
+	  
+	  //считаем % пройденных дней
+	  Calendar calendar = (Calendar) Calendar.getInstance().clone();
+	  int y = calendar.get(Calendar.YEAR);
+	  int m = calendar.get(Calendar.MONTH);
+	  int d = calendar.get(Calendar.DAY_OF_MONTH);
+	  calendar.set(y, m, 1);
+	  int max_d = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+	  
+	  float timePerc = (float)d / max_d * 100;
+	  Log.d(LOG_TAG, "% time "+timePerc+" d:"+d+" max_d:"+max_d);
+	  
+	  widgetView.setInt(R.id.progressBar1, "setProgress", (int)trafficPrec);
+	  widgetView.setInt(R.id.progressBar1, "setSecondaryProgress", (int)timePerc);
 	    
 	  //Нажатие на 1 зону
 	  Intent updateIntent = new Intent(context, TrafficStat.class);
